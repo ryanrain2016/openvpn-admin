@@ -11,7 +11,7 @@ python3 -m pip install -r requirements.txt
 配置文件见 config.py
 
 openvpn的默认配置文件见 conf.d目录
-
+server.conf中python3的地址需要根据系统实际情况修改
 # 执行
 不需要事先启动openvpn服务，也不需要事先生成证书，服务启动时会自动生成证书，如有已生成的证书，需要拷贝到conf.d目录并建议按照默认的命名，否则需要修改server.conf, client.conf中的证书文件的命名。
 
@@ -38,10 +38,12 @@ python3 app.py
 3. 用户界面未实现搜索功能
 4. 未提供用户禁用功能，会直接删除该用户记录
 5. 可能会有未知页面样式问题
+6. 根据客户端的操作系统，下载客户端时自动修改配置文件后缀名
+7. 未能实时更新传输字节数，依赖断开钩子函数更新
 
 这些功能会在以后版本中实现，敬请期待。
 
-# 部署 
+# 部署
 supervisor 管理进程
 
 nginx反代，注意websocket的字段

@@ -9,7 +9,7 @@ class CommonConfig:
 
     REDIS_POOL_MINSIZE = 5
     REDIS_POOL_MAXSIZE = 20
-    CA_CN = 'openvpn.org'              # openvpn证书的ca
+    CA_CN = 'openvpn.org'               # openvpn证书的ca
     SERVER_CN = 'server.openvpn.org'    # openvpn服务端ca
     ORGANIZATION = 'openvpn.org'        # openvpn证书组织
 
