@@ -97,7 +97,7 @@
     :mask-closable="false"
     :styles="styles"
 >
-<span># 为指定的客户端分配指定的IP地址，或者客户端背后也有一个私有子网想要访问VPN，
+<pre># 为指定的客户端分配指定的IP地址，或者客户端背后也有一个私有子网想要访问VPN，
   # 那么你可以针对该客户端的配置文件使用ccd子目录。
   # (简而言之，就是允许客户端所在的局域网成员也能够访问VPN)
 
@@ -117,7 +117,7 @@
   ;route 10.9.0.0 255.255.255.252
   # 然后在文件ccd/Thelonious中添加如下指令：
   #   ifconfig-push 10.9.0.1 10.9.0.2
-  </span>
+  </pre>
 <i-input type="textarea" :autosize="{minRows: 3,maxRows: 6}" v-model="ccd.content"></i-input>
 <i-button type="primary" @click="saveCcd()" long>保 存</i-button>
 </Drawer>
