@@ -1,4 +1,4 @@
-# openvpn-admdin
+# openvpn-admin
 一个简单的openvpn的web管理工具， 基于sanic web框架，支持3.6以上。
 
 # 安装依赖
