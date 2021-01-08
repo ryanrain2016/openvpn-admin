@@ -4,7 +4,6 @@ import os
 import zipfile
 
 import aiofiles
-import aiohttp
 from aiofiles.os import stat
 from sanic import response, views
 from sanic.exceptions import HeaderNotFound
@@ -15,7 +14,7 @@ from tortoise.transactions import in_transaction
 from config import Config
 from framework.api import (BaseApi, DeleteMixin, GetListMixin, GetMixin,
                            PatchMixin, PostMixin, PutMixin, ReadMixin,
-                           WriteMixin)
+                           WriteMixin, Pagination)
 from utils import start_openvpn, stop_openvpn
 
 from . import models
@@ -48,9 +47,12 @@ class UserApi(BaseApi, ReadMixin, WriteMixin, DeleteMixin):
     def verify_request(cls, request):
         return request['session'].get('user')
 
+class LogPagination(Pagination):
+    page_size = 15
+
 class LogApi(BaseApi, ReadMixin):
     model = models.Log
-    pagination_class = None
+    pagination_class = LogPagination
 
     @classmethod
     def verify_request(cls, request):

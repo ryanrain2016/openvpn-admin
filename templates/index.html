@@ -20,6 +20,9 @@
     height: calc(100% - 10px);
     overflow: auto;
   }
+  .pointer {
+    cursor: pointer;
+  }
   </style>
 </head>
 <body style="height: 100%;">
@@ -87,8 +90,9 @@
     :mask-closable="false"
     :styles="styles"
 >
-  <i-table :columns="log_columns" :data="connect_log">
+  <i-table :columns="log_columns" :data="connect_log.items">
   </i-table>
+  <Page :total="connect_log.total" :current="connect_log.page" page-size="15" @on-change="changeConnectLogPage"/>
 </Drawer>
 <Drawer
     :title="'客户配置-'+ ccd.username"
@@ -97,7 +101,9 @@
     :mask-closable="false"
     :styles="styles"
 >
-<pre># 为指定的客户端分配指定的IP地址，或者客户端背后也有一个私有子网想要访问VPN，
+<span>
+  <pre>
+  # 为指定的客户端分配指定的IP地址，或者客户端背后也有一个私有子网想要访问VPN，
   # 那么你可以针对该客户端的配置文件使用ccd子目录。
   # (简而言之，就是允许客户端所在的局域网成员也能够访问VPN)
 
@@ -117,7 +123,8 @@
   ;route 10.9.0.0 255.255.255.252
   # 然后在文件ccd/Thelonious中添加如下指令：
   #   ifconfig-push 10.9.0.1 10.9.0.2
-  </pre>
+</pre>
+  </span>
 <i-input type="textarea" :autosize="{minRows: 3,maxRows: 6}" v-model="ccd.content"></i-input>
 <i-button type="primary" @click="saveCcd()" long>保 存</i-button>
 </Drawer>
@@ -221,9 +228,10 @@
                     on: {
                       click: () => {
                         const item = params.row
-                        axios.get('/api/log?order_by=-id&username='+item.username).then(res =>{
+                        axios.get(`/api/log?order_by=-id&username=${item.username}`).then(res =>{
                           this.connect_log = res.data
                           this.log_drawer = true
+                          this.connect_log.item = item
                         }).catch(err => {
                           this.$Message.error(err)
                         })
@@ -288,6 +296,7 @@
           data: [],
           websocket: null,
           log: [],
+          log_page: 1,
           log_drawer:false,
           log_columns:[
             {title: '用户名', key: 'username', width: 100},
@@ -304,7 +313,12 @@
             {title: '上线时间', key: 'online_time', width: 200},
             {title: '离线时间', key: 'offline_time', width: 200}
           ],
-          connect_log: [],
+          connect_log: {
+            items: [],
+            total: 1,
+            page: 1,
+            item: null
+          },
           ccd: {
             modal: false,
             username: '',
@@ -385,6 +399,15 @@
           axios.get('/api/init_log').then((res) => {
             this.log = res.data.data
             this.scrollLog()
+          }).catch(err => {
+            this.$Message.error(err)
+          })
+        },
+        changeConnectLogPage(page) {
+          const item = this.connect_log.item
+          axios.get(`/api/log?order_by=-id&page=${page}&username=${item.username}`).then(res =>{
+            this.connect_log = res.data
+            this.connect_log.item = item
           }).catch(err => {
             this.$Message.error(err)
           })
